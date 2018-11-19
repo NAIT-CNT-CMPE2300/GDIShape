@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Circle.cs" />
+    <Compile Include="Ellipse.cs" />
     <Compile Include="Shape.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>

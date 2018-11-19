@@ -8,13 +8,13 @@ using GDIDrawer;
 
 namespace PolyDemo
 {
-    class Shape : IComparable
+    internal abstract class Shape : IComparable
     {
         #region Static Properties
         public static int CanvasWidth { set; get; }
         public static int CanvasHeight { set; get; }
         public static int MaxSpeed { set; get; }
-        private static Random Random { get; }
+        protected static Random Random { get; }
         #endregion
 
         #region Properties
@@ -42,7 +42,7 @@ namespace PolyDemo
             Color = RandColor.GetColor();
         }
 
-        public Shape(bool b):this() //Dummy overload for the ICA
+        public Shape(bool b):this() //Overload for random color
         {
             //Could do this with enums and case statements,
             //but anonymous initializer lists are fun!
@@ -65,7 +65,7 @@ namespace PolyDemo
         //       a tuple or something.
         //NB! Assumes 'Location' is CENTER of shape.
         //Remember to paint with Centered methods
-        public PointF Move() 
+        public virtual PointF Move() 
         {
             Location = new PointF(Location.X + Velocity.X,
                 Location.Y + Velocity.Y);
@@ -97,12 +97,9 @@ namespace PolyDemo
             return Location;
         }
 
-        public void Render(GDIDrawer.CDrawer canvas)
-        {
-            canvas.AddCenteredEllipse((int)Location.X, (int)Location.Y,
-                10, 10, this.Color);
-
-        }
+        //Display the shape on the provided canvas
+        public abstract void Render(GDIDrawer.CDrawer canvas);
+       
         #endregion
 
         #region Overrides
@@ -132,7 +129,7 @@ namespace PolyDemo
         #region Interfaces
         //Required for IComparable
         //Sort by color.
-        public int CompareTo(object obj)
+        public virtual int CompareTo(object obj)
         {
             if (!(obj is Shape that))
                 throw new ArgumentException(

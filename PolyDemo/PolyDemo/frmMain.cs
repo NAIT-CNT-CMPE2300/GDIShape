@@ -16,6 +16,7 @@ namespace PolyDemo
     public partial class frmMain : Form
     {
         private static CDrawer canvas = null;
+        private static Random random = null;
         private Thread Animator = null;
         private List<Shape> Shapes = null;
         private List<Shape> newShapes = null;
@@ -26,6 +27,7 @@ namespace PolyDemo
         static frmMain()
         {
             canvas = new CDrawer(canvWidth, canvHeight);
+            random = new Random();
         }
         public frmMain()
         {
@@ -71,7 +73,7 @@ namespace PolyDemo
             newShapes = new List<Shape>(10);
             while(newShapes.Count < 10)
             {
-                Shape shape = new Shape(true);
+                Shape shape = new Circle();
                 if (!newShapes.Contains(shape)) newShapes.Add(shape);
             }
             //Sort them
@@ -96,10 +98,10 @@ namespace PolyDemo
                 {//Added because my event handlers could crossthread
                     for (int i = 0; i < Shapes.Count; ++i)
                     {
-                        Shape b = Shapes[i];
+                        Shape s = Shapes[i];
                         //Move first.  That makes sure everything is on the canvas.
-                        b.Move();//This changes b! no other threads should be changing b, or I need to do more.
-                        b.Render(canvas);
+                        s.Move();//This changes b! no other threads should be changing b, or I need to do more.
+                        s.Render(canvas);
                     }
                 }
                 //Show the pretty thingees
@@ -127,9 +129,9 @@ namespace PolyDemo
             //add a Shape when and where you click
             lock(Shapes) //The other thread might be using it
             {
-                Shape b = new Shape(true);
-                b.Location = new PointF(pos.X, pos.Y);
-                Shapes.Add(b);
+                Shape s = new Circle();
+                s.Location = new PointF(pos.X, pos.Y);
+                Shapes.Add(s);
             }
         }
 
@@ -148,7 +150,7 @@ namespace PolyDemo
                 case Keys.A:
                     //Add a Shape
                     lock (Shapes)
-                        Shapes.Add(new Shape(true));
+                        Shapes.Add(new Circle());
                     break;
             }
         }
