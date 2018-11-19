@@ -73,7 +73,7 @@ namespace PolyDemo
             newShapes = new List<Shape>(10);
             while(newShapes.Count < 10)
             {
-                Shape shape = new Circle();
+                Shape shape = random.Next(2)== 0 ? new Circle() : new Ellipse();
                 if (!newShapes.Contains(shape)) newShapes.Add(shape);
             }
             //Sort them
@@ -129,7 +129,7 @@ namespace PolyDemo
             //add a Shape when and where you click
             lock(Shapes) //The other thread might be using it
             {
-                Shape s = new Circle();
+                Shape s = new Ellipse();
                 s.Location = new PointF(pos.X, pos.Y);
                 Shapes.Add(s);
             }
@@ -154,6 +154,5 @@ namespace PolyDemo
                     break;
             }
         }
-
     }
 }
