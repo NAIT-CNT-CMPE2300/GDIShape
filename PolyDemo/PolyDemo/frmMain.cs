@@ -92,7 +92,7 @@ namespace PolyDemo
 
             while (true)//Forevs, unless parent thread goes away.
             {
-                canvas.Clear();
+                if(cbErase.Checked)canvas.Clear();
                 //My kingdom for a foreach with mutable list elements
                 lock (Shapes)
                 {//Added because my event handlers could crossthread
@@ -154,5 +154,16 @@ namespace PolyDemo
                     break;
             }
         }
+
+        private void btnRenderable_Click(object sender, EventArgs e)
+        {
+            List<IRenderable> Renderables = new List<IRenderable>();
+            Renderables.Add(new Ellipse());
+            Renderables.Add(new Circle());
+            Renderables.Add(new RenderThing());
+            foreach (IRenderable R in Renderables)
+                R.Render(canvas);
+        }
+        
     }
 }

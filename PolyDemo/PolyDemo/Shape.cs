@@ -6,9 +6,19 @@ using System.Threading.Tasks;
 using System.Drawing;
 using GDIDrawer;
 
+public interface IMoveable
+{
+    PointF Move();
+}
+
+public interface IRenderable
+{
+    void Render(GDIDrawer.CDrawer canvas);
+}
+
 namespace PolyDemo
 {
-    internal abstract class Shape : IComparable
+    internal abstract class Shape : IComparable , IRenderable , IMoveable
     {
         #region Static Properties
         public static int CanvasWidth { set; get; }
@@ -59,47 +69,6 @@ namespace PolyDemo
             CanvasHeight = canvas.ScaledHeight;
         }
 
-        //Reset position+=velocity, corrected with bounce
-        //Returns new position
-        //TODO:  Eww.  PointFs aren't editable.  Redo with 
-        //       a tuple or something.
-        //NB! Assumes 'Location' is CENTER of shape.
-        //Remember to paint with Centered methods
-        public virtual PointF Move() 
-        {
-            Location = new PointF(Location.X + Velocity.X,
-                Location.Y + Velocity.Y);
-
-            //Check if now out of bounds, correct
-            if(Location.X < 0) //Left edge
-            {
-                Location = new PointF(0, Location.Y);
-                Velocity = new PointF(-Velocity.X, Velocity.Y); //Boing!
-            }
-            if (Location.X  > CanvasWidth) //Right edge
-            {
-                Location = new PointF(CanvasWidth, Location.Y);
-                Velocity = new PointF(-Velocity.X, Velocity.Y); //Boing!
-            }
-
-            //Check if now out of bounds, correct
-            if (Location.Y < 0) //Top edge
-            {
-                Location = new PointF(Location.X, 0);
-                Velocity = new PointF(Velocity.X, -Velocity.Y); //Boing!
-            }
-            if (Location.Y > CanvasHeight) //Bottom edge
-            {
-                Location = new PointF(Location.X, CanvasHeight);
-                Velocity = new PointF(Velocity.X, -Velocity.Y); //Boing!
-            }
-
-            return Location;
-        }
-
-        //Display the shape on the provided canvas
-        public abstract void Render(GDIDrawer.CDrawer canvas);
-       
         #endregion
 
         #region Overrides
@@ -135,6 +104,48 @@ namespace PolyDemo
                 throw new ArgumentException(
                     "Invalid object passed to Shape.CompareTo()");
             return this.Color.ToArgb() - that.Color.ToArgb();
+        }
+
+        //IRenderable: Display the shape on the provided canvas
+        public abstract void Render(GDIDrawer.CDrawer canvas);
+
+        //IMoveable: Move the object by a point worth of distance
+        //Reset position+=velocity, corrected with bounce
+        //Returns new position
+        //TODO:  Eww.  PointFs aren't editable.  Redo with 
+        //       a tuple or something.
+        //NB! Assumes 'Location' is CENTER of shape.
+        //Remember to paint with Centered methods
+        public virtual PointF Move()
+        {
+            Location = new PointF(Location.X + Velocity.X,
+                Location.Y + Velocity.Y);
+
+            //Check if now out of bounds, correct
+            if (Location.X < 0) //Left edge
+            {
+                Location = new PointF(0, Location.Y);
+                Velocity = new PointF(-Velocity.X, Velocity.Y); //Boing!
+            }
+            if (Location.X > CanvasWidth) //Right edge
+            {
+                Location = new PointF(CanvasWidth, Location.Y);
+                Velocity = new PointF(-Velocity.X, Velocity.Y); //Boing!
+            }
+
+            //Check if now out of bounds, correct
+            if (Location.Y < 0) //Top edge
+            {
+                Location = new PointF(Location.X, 0);
+                Velocity = new PointF(Velocity.X, -Velocity.Y); //Boing!
+            }
+            if (Location.Y > CanvasHeight) //Bottom edge
+            {
+                Location = new PointF(Location.X, CanvasHeight);
+                Velocity = new PointF(Velocity.X, -Velocity.Y); //Boing!
+            }
+
+            return Location;
         }
         #endregion
     }
