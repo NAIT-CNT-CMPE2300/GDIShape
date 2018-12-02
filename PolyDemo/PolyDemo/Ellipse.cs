@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GDIDrawer;
 
-namespace PolyDemo
+namespace PolyDemo 
 {
-    class Ellipse : Shape
+    class Ellipse : Shape , IRenderable, IMoveable
     {
         #region CTOR
         public Ellipse(float Xdia, float Ydia) : base(true)

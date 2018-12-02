@@ -162,7 +162,7 @@ namespace PolyDemo
             Renderables.Add(new Circle());
             Renderables.Add(new RenderThing());
             foreach (IRenderable R in Renderables)
-                R.Render(canvas);
+              R.Render(canvas);
         }
         
     }
